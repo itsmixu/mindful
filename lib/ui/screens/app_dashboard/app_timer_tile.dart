@@ -18,6 +18,7 @@ import 'package:mindful/core/extensions/ext_duration.dart';
 import 'package:mindful/config/hero_tags.dart';
 import 'package:mindful/models/app_info.dart';
 import 'package:mindful/providers/system/parental_controls_provider.dart';
+import 'package:mindful/providers/system/time_windows_provider.dart';
 import 'package:mindful/providers/restrictions/apps_restrictions_provider.dart';
 import 'package:mindful/ui/common/default_list_tile.dart';
 import 'package:mindful/ui/common/time_text_short.dart';
@@ -72,7 +73,7 @@ class AppTimerTile extends ConsumerWidget {
     /// If restricted by invincible mode
     final isInvincibleRestricted = ref.read(parentalControlsProvider
             .select((v) => v.isInvincibleModeOn && v.includeAppsTimer)) &&
-        !ref.read(parentalControlsProvider.notifier).isBetweenInvincibleWindow;
+        !ref.read(timeWindowsProvider).isBetweenInvincibleWindow;
 
     if (isInvincibleRestricted && appTimer > 0) {
       context.showSnackAlert(

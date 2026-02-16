@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
 import android.net.VpnService
+import android.os.SystemClock
 import androidx.activity.result.ActivityResultLauncher
 import com.mindful.android.enums.DndWakeLock
 import com.mindful.android.generics.SafeServiceConnection
@@ -36,7 +37,9 @@ import com.mindful.android.utils.Utils
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
+import java.util.Calendar
 import java.util.Locale
+import java.util.TimeZone
 
 class FgMethodCallHandler(
     private val context: Context,
@@ -105,6 +108,38 @@ class FgMethodCallHandler(
             "updateLocale" -> {
                 updateLocale(call.arguments() ?: "en")
                 result.success(true)
+            }
+
+            "getElapsedRealtimeMs" -> {
+                result.success(SystemClock.elapsedRealtime())
+            }
+
+            "getSystemTimeZoneId" -> {
+                result.success(TimeZone.getDefault().id)
+            }
+
+            "getAvailableTimeZoneIds" -> {
+                result.success(TimeZone.getAvailableIDs().toList())
+            }
+
+            "getMinutesOfDayInTimeZone" -> {
+                val args = call.arguments<Map<String, Any?>>()
+                val epochMs = (args?.get("epochMs") as? Number)?.toLong()
+                val tzId = args?.get("tzId") as? String
+
+                if (epochMs == null || tzId.isNullOrEmpty()) {
+                    result.error(
+                        "invalid_args",
+                        "epochMs (number) and tzId (string) are required",
+                        null
+                    )
+                    return
+                }
+
+                val tz = TimeZone.getTimeZone(tzId)
+                val cal = Calendar.getInstance(tz).apply { timeInMillis = epochMs }
+                val minutesOfDay = cal.get(Calendar.HOUR_OF_DAY) * 60 + cal.get(Calendar.MINUTE)
+                result.success(minutesOfDay)
             }
 
             "updateExcludedApps" -> {

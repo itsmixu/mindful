@@ -16,6 +16,7 @@ import 'package:mindful/core/enums/platform_features.dart';
 import 'package:mindful/core/extensions/ext_build_context.dart';
 import 'package:mindful/providers/restrictions/wellbeing_provider.dart';
 import 'package:mindful/providers/system/parental_controls_provider.dart';
+import 'package:mindful/providers/system/time_windows_provider.dart';
 import 'package:mindful/ui/common/default_expandable_list_tile.dart';
 import 'package:mindful/ui/common/default_list_tile.dart';
 
@@ -35,9 +36,7 @@ class SliverShortsQuickActions extends ConsumerWidget {
   ) {
     final isInvincibleRestricted = ref.read(parentalControlsProvider
             .select((v) => v.isInvincibleModeOn && v.includeShortsTimer)) &&
-        !ref
-            .read(parentalControlsProvider.notifier)
-            .isBetweenInvincibleWindow &&
+        !ref.read(timeWindowsProvider).isBetweenInvincibleWindow &&
         ref.read(wellBeingProvider.select((v) => v.allowedShortsTimeSec > 0));
 
     /// If restricted by invincible mode

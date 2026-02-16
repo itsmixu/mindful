@@ -82,7 +82,7 @@ class AppDatabase extends _$AppDatabase {
   //
   // STEP 6 => Add migration steps to migration strategy by create new file in migrations folder. See previous migrations for help
   @override
-  int get schemaVersion => 9;
+  int get schemaVersion => 10;
 
   // Always use [runSafe()] for upgrades - why?
   // If a user imports a backup from a newer schema when they are on an older
@@ -94,20 +94,51 @@ class AppDatabase extends _$AppDatabase {
         onUpgrade: (m, from, to) async {
           debugPrint("Upgrading database from schema version $from to $to");
 
-          return m.runMigrationSteps(
-            from: from,
-            to: to,
-            steps: migrationSteps(
-              from1To2: from1To2,
-              from2To3: from2To3,
-              from3To4: from3To4,
-              from4To5: from4To5,
-              from5To6: from5To6,
-              from6To7: from6To7,
-              from7To8: from7To8,
-              from8To9: from8To9,
-            ),
-          );
+          /// Keep the existing generated migration steps (up to schema 9),
+          /// then apply the schema-10 additions manually.
+          if (from < 9) {
+            await m.runMigrationSteps(
+              from: from,
+              to: 9,
+              steps: migrationSteps(
+                from1To2: from1To2,
+                from2To3: from2To3,
+                from3To4: from3To4,
+                from4To5: from4To5,
+                from5To6: from5To6,
+                from6To7: from6To7,
+                from7To8: from7To8,
+                from8To9: from8To9,
+              ),
+            );
+          }
+
+          if (from < 10) {
+            await m.addColumn(
+              parentalControlsTable,
+              parentalControlsTable.uninstallWindowTimeZoneId,
+            );
+            await m.addColumn(
+              parentalControlsTable,
+              parentalControlsTable.uninstallAnchorEpochMs,
+            );
+            await m.addColumn(
+              parentalControlsTable,
+              parentalControlsTable.uninstallAnchorElapsedMs,
+            );
+            await m.addColumn(
+              parentalControlsTable,
+              parentalControlsTable.invincibleWindowTimeZoneId,
+            );
+            await m.addColumn(
+              parentalControlsTable,
+              parentalControlsTable.invincibleAnchorEpochMs,
+            );
+            await m.addColumn(
+              parentalControlsTable,
+              parentalControlsTable.invincibleAnchorElapsedMs,
+            );
+          }
         },
       );
 }

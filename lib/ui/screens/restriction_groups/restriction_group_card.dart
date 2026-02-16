@@ -12,6 +12,7 @@ import 'package:mindful/core/extensions/ext_num.dart';
 import 'package:mindful/providers/restrictions/apps_restrictions_provider.dart';
 import 'package:mindful/providers/restrictions/restriction_groups_provider.dart';
 import 'package:mindful/providers/system/parental_controls_provider.dart';
+import 'package:mindful/providers/system/time_windows_provider.dart';
 import 'package:mindful/providers/apps/apps_info_provider.dart';
 import 'package:mindful/providers/usage/todays_apps_usage_provider.dart';
 import 'package:mindful/ui/common/application_icon.dart';
@@ -205,7 +206,7 @@ class RestrictionGroupCard extends ConsumerWidget {
   void _deleteGroup(BuildContext context, WidgetRef ref) async {
     final controls = ref.read(parentalControlsProvider);
     final isBetweenWindow =
-        ref.read(parentalControlsProvider.notifier).isBetweenInvincibleWindow;
+        ref.read(timeWindowsProvider).isBetweenInvincibleWindow;
 
     final canModifyTimer = !(controls.isInvincibleModeOn &&
         controls.includeGroupsTimer &&
@@ -252,7 +253,7 @@ class RestrictionGroupCard extends ConsumerWidget {
   void _goToEditScreen(BuildContext context, WidgetRef ref) {
     final controls = ref.read(parentalControlsProvider);
     final isBetweenWindow =
-        ref.read(parentalControlsProvider.notifier).isBetweenInvincibleWindow;
+        ref.read(timeWindowsProvider).isBetweenInvincibleWindow;
 
     final canModifyTimer = !(controls.isInvincibleModeOn &&
         controls.includeGroupsTimer &&

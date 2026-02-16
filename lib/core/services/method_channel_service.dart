@@ -75,6 +75,34 @@ class MethodChannelService {
   Future<DeviceInfoModel> getDeviceInfo() async => DeviceInfoModel.fromMap(
       await _methodChannel.invokeMapMethod('getDeviceInfo') ?? {});
 
+  /// Returns monotonic milliseconds since boot (including sleep).
+  ///
+  /// This value is resistant to user changing the wall clock time.
+  Future<int> getElapsedRealtimeMs() async =>
+      await _methodChannel.invokeMethod('getElapsedRealtimeMs');
+
+  /// Returns the device's current system timezone ID (e.g. "Europe/Helsinki").
+  Future<String> getSystemTimeZoneId() async =>
+      await _methodChannel.invokeMethod('getSystemTimeZoneId');
+
+  /// Returns available timezone IDs (IANA tz database IDs).
+  Future<List<String>> getAvailableTimeZoneIds() async =>
+      await _methodChannel.invokeListMethod<String>('getAvailableTimeZoneIds') ??
+      const <String>[];
+
+  /// Returns minutes-of-day (0..1439) for `epochMs` in the given timezone.
+  Future<int> getMinutesOfDayInTimeZone({
+    required int epochMs,
+    required String tzId,
+  }) async =>
+      await _methodChannel.invokeMethod(
+        'getMinutesOfDayInTimeZone',
+        {
+          'epochMs': epochMs,
+          'tzId': tzId,
+        },
+      );
+
   /// Gets the launch counts of apps mapped to their package name.
   Future<Map<String, int>> getAppsLaunchCount() async =>
       await _methodChannel.invokeMapMethod<String, int>('getAppsLaunchCount') ??

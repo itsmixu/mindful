@@ -17,12 +17,14 @@ import 'package:mindful/core/extensions/ext_num.dart';
 import 'package:mindful/core/extensions/ext_widget.dart';
 import 'package:mindful/config/hero_tags.dart';
 import 'package:mindful/providers/system/parental_controls_provider.dart';
+import 'package:mindful/providers/system/time_windows_provider.dart';
 import 'package:mindful/ui/common/content_section_header.dart';
 import 'package:mindful/ui/common/default_expandable_list_tile.dart';
 import 'package:mindful/ui/common/default_list_tile.dart';
 import 'package:mindful/ui/common/styled_text.dart';
 import 'package:mindful/ui/dialogs/confirmation_dialog.dart';
 import 'package:mindful/ui/dialogs/time_picker_dialog.dart';
+import 'package:mindful/ui/dialogs/timezone_picker_dialog.dart';
 import 'package:mindful/ui/transitions/default_hero.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 
@@ -45,12 +47,19 @@ class InvincibleModeSettings extends ConsumerWidget {
             context.locale.invincible_mode_dialog_button_start_anyway,
       );
       if (isConfirm) {
-        ref.read(parentalControlsProvider.notifier).switchInvincibleMode();
+        await ref.read(parentalControlsProvider.notifier).enableInvincibleMode();
       }
     } else {
-      context.showSnackAlert(
-        context.locale.invincible_mode_turn_off_snack_alert,
-      );
+      final canDisable =
+          ref.read(timeWindowsProvider).isBetweenInvincibleWindow;
+      if (!canDisable) {
+        context.showSnackAlert(
+          context.locale.invincible_mode_turn_off_snack_alert,
+        );
+        return;
+      }
+
+      await ref.read(parentalControlsProvider.notifier).disableInvincibleMode();
     }
   }
 
@@ -104,7 +113,7 @@ class InvincibleModeSettings extends ConsumerWidget {
               /// Check if between the specified window
               if (parentalControls.isInvincibleModeOn &&
                   !ref
-                      .read(parentalControlsProvider.notifier)
+                      .read(timeWindowsProvider)
                       .isBetweenInvincibleWindow) {
                 context
                     .showSnackAlert(context.locale.invincible_mode_snack_alert);
@@ -125,6 +134,49 @@ class InvincibleModeSettings extends ConsumerWidget {
               }
             },
           ),
+        ).sliver,
+
+        /// Invincible timezone
+        DefaultListTile(
+          position: ItemPosition.mid,
+          isPrimary: true,
+          titleText: 'Invincible timezone',
+          subtitleText: 'Used to evaluate the invincible window',
+          trailing: StyledText(
+            parentalControls.invincibleWindowTimeZoneId.isEmpty
+                ? 'Device timezone'
+                : parentalControls.invincibleWindowTimeZoneId,
+            fontSize: 12,
+            fontWeight: FontWeight.bold,
+          ),
+          onPressed: () async {
+            /// Check if between the specified window
+            if (parentalControls.isInvincibleModeOn &&
+                !ref
+                    .read(timeWindowsProvider)
+                    .isBetweenInvincibleWindow) {
+              context.showSnackAlert(context.locale.invincible_mode_snack_alert);
+              return;
+            }
+
+            final pickedTz = await showTimeZonePickerDialog(
+              context: context,
+              title: 'Invincible timezone',
+              initialTimeZoneId: parentalControls.invincibleWindowTimeZoneId,
+            );
+
+            if (pickedTz != null && context.mounted) {
+              ref
+                  .read(parentalControlsProvider.notifier)
+                  .setInvincibleWindowTimeZoneId(pickedTz);
+
+              if (parentalControls.isInvincibleModeOn) {
+                await ref
+                    .read(parentalControlsProvider.notifier)
+                    .ensureInvincibleWindowAnchors(force: false);
+              }
+            }
+          },
         ).sliver,
 
         /// App restrictions

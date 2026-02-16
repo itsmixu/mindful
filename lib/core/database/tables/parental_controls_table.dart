@@ -28,6 +28,20 @@ class ParentalControlsTable extends Table {
       .map(const TimeOfDayAdapterConverter())
       .withDefault(const Constant(0))();
 
+  /// Timezone ID used for the uninstall window (e.g. "Europe/Helsinki").
+  ///
+  /// Stored separately to prevent bypass by changing device timezone.
+  TextColumn get uninstallWindowTimeZoneId =>
+      text().withDefault(const Constant(''))();
+
+  /// Anchor wall-clock epoch (ms) for uninstall window checks.
+  IntColumn get uninstallAnchorEpochMs =>
+      integer().withDefault(const Constant(0))();
+
+  /// Anchor monotonic elapsed realtime (ms) for uninstall window checks.
+  IntColumn get uninstallAnchorElapsedMs =>
+      integer().withDefault(const Constant(0))();
+
   /// Flag indicating if invincible mode is ON
   BoolColumn get isInvincibleModeOn =>
       boolean().withDefault(const Constant(false))();
@@ -36,6 +50,20 @@ class ParentalControlsTable extends Table {
   IntColumn get invincibleWindowTime => integer()
       .map(const TimeOfDayAdapterConverter())
       .withDefault(const Constant(0))();
+
+  /// Timezone ID used for the invincible window (e.g. "Europe/Helsinki").
+  ///
+  /// Stored separately to prevent bypass by changing device timezone.
+  TextColumn get invincibleWindowTimeZoneId =>
+      text().withDefault(const Constant(''))();
+
+  /// Anchor wall-clock epoch (ms) for invincible window checks.
+  IntColumn get invincibleAnchorEpochMs =>
+      integer().withDefault(const Constant(0))();
+
+  /// Anchor monotonic elapsed realtime (ms) for invincible window checks.
+  IntColumn get invincibleAnchorElapsedMs =>
+      integer().withDefault(const Constant(0))();
 
   /// Flag indicating if apps timer are included in the invincible mode
   ///

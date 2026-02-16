@@ -18,12 +18,14 @@ import 'package:mindful/core/extensions/ext_widget.dart';
 import 'package:mindful/core/services/auth_service.dart';
 import 'package:mindful/providers/system/parental_controls_provider.dart';
 import 'package:mindful/providers/system/permissions_provider.dart';
+import 'package:mindful/providers/system/time_windows_provider.dart';
 import 'package:mindful/ui/common/content_section_header.dart';
 import 'package:mindful/ui/common/default_list_tile.dart';
 import 'package:mindful/ui/common/scaffold_shell.dart';
 import 'package:mindful/ui/common/sliver_tabs_bottom_padding.dart';
 import 'package:mindful/ui/common/styled_text.dart';
 import 'package:mindful/ui/dialogs/time_picker_dialog.dart';
+import 'package:mindful/ui/dialogs/timezone_picker_dialog.dart';
 import 'package:mindful/ui/permissions/admin_permission_tile.dart';
 import 'package:mindful/ui/screens/parental_controls/invincible_mode_settings.dart';
 import 'package:mindful/ui/transitions/default_hero.dart';
@@ -113,7 +115,7 @@ class ParentalControlsScreen extends ConsumerWidget {
               DefaultHero(
                 tag: HeroTags.uninstallWindowTileTag,
                 child: DefaultListTile(
-                  position: ItemPosition.bottom,
+                  position: ItemPosition.mid,
                   titleText: context.locale.uninstall_window_tile_title,
                   subtitleText: context.locale.uninstall_window_tile_subtitle,
                   trailing: StyledText(
@@ -125,7 +127,7 @@ class ParentalControlsScreen extends ConsumerWidget {
                     /// Check if between the specified window
                     if (isAdminEnabled &&
                         !ref
-                            .read(parentalControlsProvider.notifier)
+                            .read(timeWindowsProvider)
                             .isBetweenUninstallWindow) {
                       context.showSnackAlert(
                         context.locale.permission_admin_snack_alert,
@@ -147,6 +149,50 @@ class ParentalControlsScreen extends ConsumerWidget {
                     }
                   },
                 ),
+              ).sliver,
+
+              /// Uninstall timezone
+              DefaultListTile(
+                position: ItemPosition.bottom,
+                titleText: 'Uninstall timezone',
+                subtitleText: 'Used to evaluate the uninstall window',
+                trailing: StyledText(
+                  parentalControls.uninstallWindowTimeZoneId.isEmpty
+                      ? 'Device timezone'
+                      : parentalControls.uninstallWindowTimeZoneId,
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                ),
+                onPressed: () async {
+                  /// Check if between the specified window
+                  if (isAdminEnabled &&
+                      !ref
+                          .read(timeWindowsProvider)
+                          .isBetweenUninstallWindow) {
+                    context.showSnackAlert(
+                      context.locale.permission_admin_snack_alert,
+                    );
+                    return;
+                  }
+
+                  final pickedTz = await showTimeZonePickerDialog(
+                    context: context,
+                    title: 'Uninstall timezone',
+                    initialTimeZoneId: parentalControls.uninstallWindowTimeZoneId,
+                  );
+
+                  if (pickedTz != null && context.mounted) {
+                    ref
+                        .read(parentalControlsProvider.notifier)
+                        .setUninstallWindowTimeZoneId(pickedTz);
+
+                    if (isAdminEnabled) {
+                      await ref
+                          .read(parentalControlsProvider.notifier)
+                          .ensureUninstallWindowAnchors(force: false);
+                    }
+                  }
+                },
               ).sliver,
 
               const SliverTabsBottomPadding(),

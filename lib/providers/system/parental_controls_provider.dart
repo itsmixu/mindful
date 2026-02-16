@@ -11,8 +11,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mindful/core/database/adapters/time_of_day_adapter.dart';
 import 'package:mindful/core/database/app_database.dart';
-import 'package:mindful/core/extensions/ext_date_time.dart';
 import 'package:mindful/core/services/drift_db_service.dart';
+import 'package:mindful/core/services/method_channel_service.dart';
 import 'package:mindful/core/utils/default_models_utils.dart';
 
 /// A Riverpod state notifier provider that manages [ParentalControls]
@@ -22,18 +22,6 @@ final parentalControlsProvider =
 );
 
 class ParentalControlsNotifier extends StateNotifier<ParentalControls> {
-  /// Returns `TRUE` if the time now is between the uninstall window otherwise `FALSE`.
-  bool get isBetweenUninstallWindow => DateTime.now().isBetweenTod(
-        state.uninstallWindowTime,
-        TimeOfDayAdapter.fromMinutes(state.uninstallWindowTime.toMinutes + 10),
-      );
-
-  /// Returns `TRUE` if the time now is between the invincible window otherwise `FALSE`.
-  bool get isBetweenInvincibleWindow => DateTime.now().isBetweenTod(
-        state.invincibleWindowTime,
-        TimeOfDayAdapter.fromMinutes(state.invincibleWindowTime.toMinutes + 10),
-      );
-
   ParentalControlsNotifier() : super(defaultParentalControlsModel) {
     init();
   }
@@ -49,6 +37,12 @@ class ParentalControlsNotifier extends StateNotifier<ParentalControls> {
       (state) => dao.saveParentalControls(state),
     );
 
+    /// If invincible mode is already enabled (e.g. app restart / upgrade),
+    /// ensure we have anchors + timezone to prevent wall-clock bypass.
+    if (state.isInvincibleModeOn) {
+      await ensureInvincibleWindowAnchors(force: false);
+    }
+
     return state;
   }
 
@@ -56,16 +50,90 @@ class ParentalControlsNotifier extends StateNotifier<ParentalControls> {
   void switchProtectedAccess() =>
       state = state.copyWith(protectedAccess: !state.protectedAccess);
 
+  /// Sets the timezone ID used to evaluate the uninstall window.
+  void setUninstallWindowTimeZoneId(String tzId) =>
+      state = state.copyWith(uninstallWindowTimeZoneId: tzId);
+
   /// Changes the time of day when uninstall widow starts for 5 minutes.
   void changeUninstallWindowTime(TimeOfDayAdapter time) =>
       state = state.copyWith(uninstallWindowTime: time);
+
+  /// Ensures timezone + anchors exist for uninstall window checks.
+  ///
+  /// Anchors are used to derive a "trusted now" from monotonic time so users
+  /// can't bypass by changing system wall clock.
+  Future<void> ensureUninstallWindowAnchors({bool force = false}) async {
+    final tz = state.uninstallWindowTimeZoneId.isNotEmpty
+        ? state.uninstallWindowTimeZoneId
+        : await MethodChannelService.instance.getSystemTimeZoneId();
+
+    final shouldSetTz = state.uninstallWindowTimeZoneId.isEmpty;
+    final shouldSetAnchors = force ||
+        state.uninstallAnchorEpochMs <= 0 ||
+        state.uninstallAnchorElapsedMs <= 0;
+
+    if (!shouldSetTz && !shouldSetAnchors) return;
+
+    final nowEpochMs = DateTime.now().millisecondsSinceEpoch;
+    final nowElapsedMs = await MethodChannelService.instance.getElapsedRealtimeMs();
+
+    state = state.copyWith(
+      uninstallWindowTimeZoneId: shouldSetTz ? tz : state.uninstallWindowTimeZoneId,
+      uninstallAnchorEpochMs:
+          shouldSetAnchors ? nowEpochMs : state.uninstallAnchorEpochMs,
+      uninstallAnchorElapsedMs:
+          shouldSetAnchors ? nowElapsedMs : state.uninstallAnchorElapsedMs,
+    );
+  }
+
+  /// Sets the timezone ID used to evaluate the invincible window.
+  void setInvincibleWindowTimeZoneId(String tzId) =>
+      state = state.copyWith(invincibleWindowTimeZoneId: tzId);
 
   /// Changes the time of day when invincible widow starts for 5 minutes.
   void changeInvincibleWindowTime(TimeOfDayAdapter time) =>
       state = state.copyWith(invincibleWindowTime: time);
 
-  void switchInvincibleMode() =>
-      state = state.copyWith(isInvincibleModeOn: !state.isInvincibleModeOn);
+  /// Ensures timezone + anchors exist for invincible window checks.
+  Future<void> ensureInvincibleWindowAnchors({bool force = false}) async {
+    final tz = state.invincibleWindowTimeZoneId.isNotEmpty
+        ? state.invincibleWindowTimeZoneId
+        : await MethodChannelService.instance.getSystemTimeZoneId();
+
+    final shouldSetTz = state.invincibleWindowTimeZoneId.isEmpty;
+    final shouldSetAnchors = force ||
+        state.invincibleAnchorEpochMs <= 0 ||
+        state.invincibleAnchorElapsedMs <= 0;
+
+    if (!shouldSetTz && !shouldSetAnchors) return;
+
+    final nowEpochMs = DateTime.now().millisecondsSinceEpoch;
+    final nowElapsedMs = await MethodChannelService.instance.getElapsedRealtimeMs();
+
+    state = state.copyWith(
+      invincibleWindowTimeZoneId:
+          shouldSetTz ? tz : state.invincibleWindowTimeZoneId,
+      invincibleAnchorEpochMs:
+          shouldSetAnchors ? nowEpochMs : state.invincibleAnchorEpochMs,
+      invincibleAnchorElapsedMs:
+          shouldSetAnchors ? nowElapsedMs : state.invincibleAnchorElapsedMs,
+    );
+  }
+
+  /// Enables invincible mode and (re-)anchors trusted time.
+  Future<void> enableInvincibleMode() async {
+    await ensureInvincibleWindowAnchors(force: true);
+    state = state.copyWith(isInvincibleModeOn: true);
+  }
+
+  /// Disables invincible mode and clears anchors.
+  Future<void> disableInvincibleMode() async {
+    state = state.copyWith(
+      isInvincibleModeOn: false,
+      invincibleAnchorEpochMs: 0,
+      invincibleAnchorElapsedMs: 0,
+    );
+  }
 
   void toggleIncludeAppsTimer() =>
       state = state.copyWith(includeAppsTimer: !state.includeAppsTimer);

@@ -13,27 +13,31 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mindful/core/enums/permission_type.dart';
 import 'package:mindful/core/services/method_channel_service.dart';
+import 'package:mindful/providers/system/parental_controls_provider.dart';
 import 'package:mindful/models/permissions_model.dart';
 
 /// A Riverpod state notifier provider that manages and requests various permissions required by the app.
 final permissionProvider =
     StateNotifierProvider<PermissionNotifier, PermissionsModel>(
-  (ref) => PermissionNotifier(),
+  (ref) => PermissionNotifier(ref),
 );
 
 /// This class manages the state of app permissions and handles permission requests.
 class PermissionNotifier extends StateNotifier<PermissionsModel>
     with WidgetsBindingObserver {
-  PermissionNotifier() : super(const PermissionsModel()) {
+  PermissionNotifier(this._ref) : super(const PermissionsModel()) {
     WidgetsBinding.instance.addObserver(this);
     fetchPermissionsStatus();
   }
+
+  final Ref _ref;
 
   /// Tracks the last requested permission type for handling lifecycle changes.
   PermissionType _askedPermission = PermissionType.none;
 
   /// Create [PermissionsModel] and initializes with permission state by fetching initial permission status then updated state.
   Future<PermissionsModel> fetchPermissionsStatus() async {
+    final prevAdmin = state.haveAdminPermission;
     final cache = PermissionsModel(
       haveNotificationPermission:
           await MethodChannelService.instance.getAndAskNotificationPermission(),
@@ -58,6 +62,13 @@ class PermissionNotifier extends StateNotifier<PermissionsModel>
     );
 
     state = cache;
+
+    if (!prevAdmin && cache.haveAdminPermission) {
+      await _ref
+          .read(parentalControlsProvider.notifier)
+          .ensureUninstallWindowAnchors(force: true);
+    }
+
     return cache;
   }
 
@@ -73,6 +84,7 @@ class PermissionNotifier extends StateNotifier<PermissionsModel>
   void didChangeAppLifecycleState(AppLifecycleState appState) async {
     if (appState != AppLifecycleState.resumed) return;
 
+    final prevAdmin = state.haveAdminPermission;
     state = switch (_askedPermission) {
       PermissionType.none => state,
       PermissionType.notification => state.copyWith(
@@ -120,6 +132,12 @@ class PermissionNotifier extends StateNotifier<PermissionsModel>
     };
 
     _askedPermission = PermissionType.none;
+
+    if (!prevAdmin && state.haveAdminPermission) {
+      await _ref
+          .read(parentalControlsProvider.notifier)
+          .ensureUninstallWindowAnchors(force: true);
+    }
   }
 
   /// Requests the notification permission and updates the internal state.

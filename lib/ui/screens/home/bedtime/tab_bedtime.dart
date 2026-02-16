@@ -17,6 +17,7 @@ import 'package:mindful/core/extensions/ext_num.dart';
 import 'package:mindful/core/extensions/ext_widget.dart';
 import 'package:mindful/providers/restrictions/bedtime_provider.dart';
 import 'package:mindful/providers/system/parental_controls_provider.dart';
+import 'package:mindful/providers/system/time_windows_provider.dart';
 import 'package:mindful/ui/common/default_list_tile.dart';
 import 'package:mindful/ui/common/content_section_header.dart';
 import 'package:mindful/ui/common/styled_text.dart';
@@ -61,7 +62,7 @@ class TabBedtime extends ConsumerWidget {
     /// If restricted by invincible mode
     final isInvincibleRestricted = ref.read(parentalControlsProvider
             .select((v) => v.isInvincibleModeOn && v.includeBedtimeSchedule)) &&
-        !ref.read(parentalControlsProvider.notifier).isBetweenInvincibleWindow;
+        !ref.read(timeWindowsProvider).isBetweenInvincibleWindow;
 
     /// If time now is between bedtime schedule
     final isBetweenSchedule =

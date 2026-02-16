@@ -3134,6 +3134,31 @@ class $ParentalControlsTableTable extends ParentalControlsTable
               defaultValue: const Constant(0))
           .withConverter<TimeOfDayAdapter>(
               $ParentalControlsTableTable.$converteruninstallWindowTime);
+  static const VerificationMeta _uninstallWindowTimeZoneIdMeta =
+      const VerificationMeta('uninstallWindowTimeZoneId');
+  @override
+  late final GeneratedColumn<String> uninstallWindowTimeZoneId =
+      GeneratedColumn<String>('uninstall_window_time_zone_id', aliasedName,
+          false,
+          type: DriftSqlType.string,
+          requiredDuringInsert: false,
+          defaultValue: const Constant(''));
+  static const VerificationMeta _uninstallAnchorEpochMsMeta =
+      const VerificationMeta('uninstallAnchorEpochMs');
+  @override
+  late final GeneratedColumn<int> uninstallAnchorEpochMs = GeneratedColumn<int>(
+      'uninstall_anchor_epoch_ms', aliasedName, false,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultValue: const Constant(0));
+  static const VerificationMeta _uninstallAnchorElapsedMsMeta =
+      const VerificationMeta('uninstallAnchorElapsedMs');
+  @override
+  late final GeneratedColumn<int> uninstallAnchorElapsedMs =
+      GeneratedColumn<int>('uninstall_anchor_elapsed_ms', aliasedName, false,
+          type: DriftSqlType.int,
+          requiredDuringInsert: false,
+          defaultValue: const Constant(0));
   static const VerificationMeta _isInvincibleModeOnMeta =
       const VerificationMeta('isInvincibleModeOn');
   @override
@@ -3153,6 +3178,31 @@ class $ParentalControlsTableTable extends ParentalControlsTable
               defaultValue: const Constant(0))
           .withConverter<TimeOfDayAdapter>(
               $ParentalControlsTableTable.$converterinvincibleWindowTime);
+  static const VerificationMeta _invincibleWindowTimeZoneIdMeta =
+      const VerificationMeta('invincibleWindowTimeZoneId');
+  @override
+  late final GeneratedColumn<String> invincibleWindowTimeZoneId =
+      GeneratedColumn<String>('invincible_window_time_zone_id', aliasedName,
+          false,
+          type: DriftSqlType.string,
+          requiredDuringInsert: false,
+          defaultValue: const Constant(''));
+  static const VerificationMeta _invincibleAnchorEpochMsMeta =
+      const VerificationMeta('invincibleAnchorEpochMs');
+  @override
+  late final GeneratedColumn<int> invincibleAnchorEpochMs =
+      GeneratedColumn<int>('invincible_anchor_epoch_ms', aliasedName, false,
+          type: DriftSqlType.int,
+          requiredDuringInsert: false,
+          defaultValue: const Constant(0));
+  static const VerificationMeta _invincibleAnchorElapsedMsMeta =
+      const VerificationMeta('invincibleAnchorElapsedMs');
+  @override
+  late final GeneratedColumn<int> invincibleAnchorElapsedMs =
+      GeneratedColumn<int>('invincible_anchor_elapsed_ms', aliasedName, false,
+          type: DriftSqlType.int,
+          requiredDuringInsert: false,
+          defaultValue: const Constant(0));
   static const VerificationMeta _includeAppsTimerMeta =
       const VerificationMeta('includeAppsTimer');
   @override
@@ -3228,8 +3278,14 @@ class $ParentalControlsTableTable extends ParentalControlsTable
         id,
         protectedAccess,
         uninstallWindowTime,
+        uninstallWindowTimeZoneId,
+        uninstallAnchorEpochMs,
+        uninstallAnchorElapsedMs,
         isInvincibleModeOn,
         invincibleWindowTime,
+        invincibleWindowTimeZoneId,
+        invincibleAnchorEpochMs,
+        invincibleAnchorElapsedMs,
         includeAppsTimer,
         includeAppsLaunchLimit,
         includeAppsActivePeriod,
@@ -3257,11 +3313,51 @@ class $ParentalControlsTableTable extends ParentalControlsTable
           protectedAccess.isAcceptableOrUnknown(
               data['protected_access']!, _protectedAccessMeta));
     }
+    if (data.containsKey('uninstall_window_time_zone_id')) {
+      context.handle(
+          _uninstallWindowTimeZoneIdMeta,
+          uninstallWindowTimeZoneId.isAcceptableOrUnknown(
+              data['uninstall_window_time_zone_id']!,
+              _uninstallWindowTimeZoneIdMeta));
+    }
+    if (data.containsKey('uninstall_anchor_epoch_ms')) {
+      context.handle(
+          _uninstallAnchorEpochMsMeta,
+          uninstallAnchorEpochMs.isAcceptableOrUnknown(
+              data['uninstall_anchor_epoch_ms']!, _uninstallAnchorEpochMsMeta));
+    }
+    if (data.containsKey('uninstall_anchor_elapsed_ms')) {
+      context.handle(
+          _uninstallAnchorElapsedMsMeta,
+          uninstallAnchorElapsedMs.isAcceptableOrUnknown(
+              data['uninstall_anchor_elapsed_ms']!,
+              _uninstallAnchorElapsedMsMeta));
+    }
     if (data.containsKey('is_invincible_mode_on')) {
       context.handle(
           _isInvincibleModeOnMeta,
           isInvincibleModeOn.isAcceptableOrUnknown(
               data['is_invincible_mode_on']!, _isInvincibleModeOnMeta));
+    }
+    if (data.containsKey('invincible_window_time_zone_id')) {
+      context.handle(
+          _invincibleWindowTimeZoneIdMeta,
+          invincibleWindowTimeZoneId.isAcceptableOrUnknown(
+              data['invincible_window_time_zone_id']!,
+              _invincibleWindowTimeZoneIdMeta));
+    }
+    if (data.containsKey('invincible_anchor_epoch_ms')) {
+      context.handle(
+          _invincibleAnchorEpochMsMeta,
+          invincibleAnchorEpochMs.isAcceptableOrUnknown(
+              data['invincible_anchor_epoch_ms']!, _invincibleAnchorEpochMsMeta));
+    }
+    if (data.containsKey('invincible_anchor_elapsed_ms')) {
+      context.handle(
+          _invincibleAnchorElapsedMsMeta,
+          invincibleAnchorElapsedMs.isAcceptableOrUnknown(
+              data['invincible_anchor_elapsed_ms']!,
+              _invincibleAnchorElapsedMsMeta));
     }
     if (data.containsKey('include_apps_timer')) {
       context.handle(
@@ -3324,12 +3420,29 @@ class $ParentalControlsTableTable extends ParentalControlsTable
           .$converteruninstallWindowTime
           .fromSql(attachedDatabase.typeMapping.read(DriftSqlType.int,
               data['${effectivePrefix}uninstall_window_time'])!),
+      uninstallWindowTimeZoneId: attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}uninstall_window_time_zone_id'])!,
+      uninstallAnchorEpochMs: attachedDatabase.typeMapping.read(
+          DriftSqlType.int, data['${effectivePrefix}uninstall_anchor_epoch_ms'])!,
+      uninstallAnchorElapsedMs: attachedDatabase.typeMapping.read(
+          DriftSqlType.int,
+          data['${effectivePrefix}uninstall_anchor_elapsed_ms'])!,
       isInvincibleModeOn: attachedDatabase.typeMapping.read(
           DriftSqlType.bool, data['${effectivePrefix}is_invincible_mode_on'])!,
       invincibleWindowTime: $ParentalControlsTableTable
           .$converterinvincibleWindowTime
           .fromSql(attachedDatabase.typeMapping.read(DriftSqlType.int,
               data['${effectivePrefix}invincible_window_time'])!),
+      invincibleWindowTimeZoneId: attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}invincible_window_time_zone_id'])!,
+      invincibleAnchorEpochMs: attachedDatabase.typeMapping.read(
+          DriftSqlType.int,
+          data['${effectivePrefix}invincible_anchor_epoch_ms'])!,
+      invincibleAnchorElapsedMs: attachedDatabase.typeMapping.read(
+          DriftSqlType.int,
+          data['${effectivePrefix}invincible_anchor_elapsed_ms'])!,
       includeAppsTimer: attachedDatabase.typeMapping.read(
           DriftSqlType.bool, data['${effectivePrefix}include_apps_timer'])!,
       includeAppsLaunchLimit: attachedDatabase.typeMapping.read(
@@ -3373,11 +3486,29 @@ class ParentalControls extends DataClass
   /// Daily uninstall window start time [TimeOfDay] stored as minutes
   final TimeOfDayAdapter uninstallWindowTime;
 
+  /// Timezone ID used for the uninstall window (e.g. "Europe/Helsinki").
+  final String uninstallWindowTimeZoneId;
+
+  /// Anchor wall-clock epoch (ms) for uninstall window checks.
+  final int uninstallAnchorEpochMs;
+
+  /// Anchor monotonic elapsed realtime (ms) for uninstall window checks.
+  final int uninstallAnchorElapsedMs;
+
   /// Flag indicating if invincible mode is ON
   final bool isInvincibleModeOn;
 
   /// Daily invincible window start time [TimeOfDay] stored as minutes
   final TimeOfDayAdapter invincibleWindowTime;
+
+  /// Timezone ID used for the invincible window (e.g. "Europe/Helsinki").
+  final String invincibleWindowTimeZoneId;
+
+  /// Anchor wall-clock epoch (ms) for invincible window checks.
+  final int invincibleAnchorEpochMs;
+
+  /// Anchor monotonic elapsed realtime (ms) for invincible window checks.
+  final int invincibleAnchorElapsedMs;
 
   /// Flag indicating if apps timer are included in the invincible mode
   ///
@@ -3417,8 +3548,14 @@ class ParentalControls extends DataClass
       {required this.id,
       required this.protectedAccess,
       required this.uninstallWindowTime,
+      required this.uninstallWindowTimeZoneId,
+      required this.uninstallAnchorEpochMs,
+      required this.uninstallAnchorElapsedMs,
       required this.isInvincibleModeOn,
       required this.invincibleWindowTime,
+      required this.invincibleWindowTimeZoneId,
+      required this.invincibleAnchorEpochMs,
+      required this.invincibleAnchorElapsedMs,
       required this.includeAppsTimer,
       required this.includeAppsLaunchLimit,
       required this.includeAppsActivePeriod,
@@ -3436,12 +3573,22 @@ class ParentalControls extends DataClass
           .$converteruninstallWindowTime
           .toSql(uninstallWindowTime));
     }
+    map['uninstall_window_time_zone_id'] =
+        Variable<String>(uninstallWindowTimeZoneId);
+    map['uninstall_anchor_epoch_ms'] = Variable<int>(uninstallAnchorEpochMs);
+    map['uninstall_anchor_elapsed_ms'] =
+        Variable<int>(uninstallAnchorElapsedMs);
     map['is_invincible_mode_on'] = Variable<bool>(isInvincibleModeOn);
     {
       map['invincible_window_time'] = Variable<int>($ParentalControlsTableTable
           .$converterinvincibleWindowTime
           .toSql(invincibleWindowTime));
     }
+    map['invincible_window_time_zone_id'] =
+        Variable<String>(invincibleWindowTimeZoneId);
+    map['invincible_anchor_epoch_ms'] = Variable<int>(invincibleAnchorEpochMs);
+    map['invincible_anchor_elapsed_ms'] =
+        Variable<int>(invincibleAnchorElapsedMs);
     map['include_apps_timer'] = Variable<bool>(includeAppsTimer);
     map['include_apps_launch_limit'] = Variable<bool>(includeAppsLaunchLimit);
     map['include_apps_active_period'] = Variable<bool>(includeAppsActivePeriod);
@@ -3458,8 +3605,14 @@ class ParentalControls extends DataClass
       id: Value(id),
       protectedAccess: Value(protectedAccess),
       uninstallWindowTime: Value(uninstallWindowTime),
+      uninstallWindowTimeZoneId: Value(uninstallWindowTimeZoneId),
+      uninstallAnchorEpochMs: Value(uninstallAnchorEpochMs),
+      uninstallAnchorElapsedMs: Value(uninstallAnchorElapsedMs),
       isInvincibleModeOn: Value(isInvincibleModeOn),
       invincibleWindowTime: Value(invincibleWindowTime),
+      invincibleWindowTimeZoneId: Value(invincibleWindowTimeZoneId),
+      invincibleAnchorEpochMs: Value(invincibleAnchorEpochMs),
+      invincibleAnchorElapsedMs: Value(invincibleAnchorElapsedMs),
       includeAppsTimer: Value(includeAppsTimer),
       includeAppsLaunchLimit: Value(includeAppsLaunchLimit),
       includeAppsActivePeriod: Value(includeAppsActivePeriod),
@@ -3479,10 +3632,22 @@ class ParentalControls extends DataClass
       uninstallWindowTime: $ParentalControlsTableTable
           .$converteruninstallWindowTime
           .fromJson(serializer.fromJson<dynamic>(json['uninstallWindowTime'])),
+      uninstallWindowTimeZoneId:
+          serializer.fromJson<String>(json['uninstallWindowTimeZoneId']),
+      uninstallAnchorEpochMs:
+          serializer.fromJson<int>(json['uninstallAnchorEpochMs']),
+      uninstallAnchorElapsedMs:
+          serializer.fromJson<int>(json['uninstallAnchorElapsedMs']),
       isInvincibleModeOn: serializer.fromJson<bool>(json['isInvincibleModeOn']),
       invincibleWindowTime: $ParentalControlsTableTable
           .$converterinvincibleWindowTime
           .fromJson(serializer.fromJson<dynamic>(json['invincibleWindowTime'])),
+      invincibleWindowTimeZoneId:
+          serializer.fromJson<String>(json['invincibleWindowTimeZoneId']),
+      invincibleAnchorEpochMs:
+          serializer.fromJson<int>(json['invincibleAnchorEpochMs']),
+      invincibleAnchorElapsedMs:
+          serializer.fromJson<int>(json['invincibleAnchorElapsedMs']),
       includeAppsTimer: serializer.fromJson<bool>(json['includeAppsTimer']),
       includeAppsLaunchLimit:
           serializer.fromJson<bool>(json['includeAppsLaunchLimit']),
@@ -3505,10 +3670,20 @@ class ParentalControls extends DataClass
       'uninstallWindowTime': serializer.toJson<dynamic>(
           $ParentalControlsTableTable.$converteruninstallWindowTime
               .toJson(uninstallWindowTime)),
+      'uninstallWindowTimeZoneId':
+          serializer.toJson<String>(uninstallWindowTimeZoneId),
+      'uninstallAnchorEpochMs': serializer.toJson<int>(uninstallAnchorEpochMs),
+      'uninstallAnchorElapsedMs':
+          serializer.toJson<int>(uninstallAnchorElapsedMs),
       'isInvincibleModeOn': serializer.toJson<bool>(isInvincibleModeOn),
       'invincibleWindowTime': serializer.toJson<dynamic>(
           $ParentalControlsTableTable.$converterinvincibleWindowTime
               .toJson(invincibleWindowTime)),
+      'invincibleWindowTimeZoneId':
+          serializer.toJson<String>(invincibleWindowTimeZoneId),
+      'invincibleAnchorEpochMs': serializer.toJson<int>(invincibleAnchorEpochMs),
+      'invincibleAnchorElapsedMs':
+          serializer.toJson<int>(invincibleAnchorElapsedMs),
       'includeAppsTimer': serializer.toJson<bool>(includeAppsTimer),
       'includeAppsLaunchLimit': serializer.toJson<bool>(includeAppsLaunchLimit),
       'includeAppsActivePeriod':
@@ -3525,8 +3700,14 @@ class ParentalControls extends DataClass
           {int? id,
           bool? protectedAccess,
           TimeOfDayAdapter? uninstallWindowTime,
+          String? uninstallWindowTimeZoneId,
+          int? uninstallAnchorEpochMs,
+          int? uninstallAnchorElapsedMs,
           bool? isInvincibleModeOn,
           TimeOfDayAdapter? invincibleWindowTime,
+          String? invincibleWindowTimeZoneId,
+          int? invincibleAnchorEpochMs,
+          int? invincibleAnchorElapsedMs,
           bool? includeAppsTimer,
           bool? includeAppsLaunchLimit,
           bool? includeAppsActivePeriod,
@@ -3538,8 +3719,20 @@ class ParentalControls extends DataClass
         id: id ?? this.id,
         protectedAccess: protectedAccess ?? this.protectedAccess,
         uninstallWindowTime: uninstallWindowTime ?? this.uninstallWindowTime,
+        uninstallWindowTimeZoneId:
+            uninstallWindowTimeZoneId ?? this.uninstallWindowTimeZoneId,
+        uninstallAnchorEpochMs:
+            uninstallAnchorEpochMs ?? this.uninstallAnchorEpochMs,
+        uninstallAnchorElapsedMs:
+            uninstallAnchorElapsedMs ?? this.uninstallAnchorElapsedMs,
         isInvincibleModeOn: isInvincibleModeOn ?? this.isInvincibleModeOn,
         invincibleWindowTime: invincibleWindowTime ?? this.invincibleWindowTime,
+        invincibleWindowTimeZoneId:
+            invincibleWindowTimeZoneId ?? this.invincibleWindowTimeZoneId,
+        invincibleAnchorEpochMs:
+            invincibleAnchorEpochMs ?? this.invincibleAnchorEpochMs,
+        invincibleAnchorElapsedMs:
+            invincibleAnchorElapsedMs ?? this.invincibleAnchorElapsedMs,
         includeAppsTimer: includeAppsTimer ?? this.includeAppsTimer,
         includeAppsLaunchLimit:
             includeAppsLaunchLimit ?? this.includeAppsLaunchLimit,
@@ -3561,12 +3754,30 @@ class ParentalControls extends DataClass
       uninstallWindowTime: data.uninstallWindowTime.present
           ? data.uninstallWindowTime.value
           : this.uninstallWindowTime,
+      uninstallWindowTimeZoneId: data.uninstallWindowTimeZoneId.present
+          ? data.uninstallWindowTimeZoneId.value
+          : this.uninstallWindowTimeZoneId,
+      uninstallAnchorEpochMs: data.uninstallAnchorEpochMs.present
+          ? data.uninstallAnchorEpochMs.value
+          : this.uninstallAnchorEpochMs,
+      uninstallAnchorElapsedMs: data.uninstallAnchorElapsedMs.present
+          ? data.uninstallAnchorElapsedMs.value
+          : this.uninstallAnchorElapsedMs,
       isInvincibleModeOn: data.isInvincibleModeOn.present
           ? data.isInvincibleModeOn.value
           : this.isInvincibleModeOn,
       invincibleWindowTime: data.invincibleWindowTime.present
           ? data.invincibleWindowTime.value
           : this.invincibleWindowTime,
+      invincibleWindowTimeZoneId: data.invincibleWindowTimeZoneId.present
+          ? data.invincibleWindowTimeZoneId.value
+          : this.invincibleWindowTimeZoneId,
+      invincibleAnchorEpochMs: data.invincibleAnchorEpochMs.present
+          ? data.invincibleAnchorEpochMs.value
+          : this.invincibleAnchorEpochMs,
+      invincibleAnchorElapsedMs: data.invincibleAnchorElapsedMs.present
+          ? data.invincibleAnchorElapsedMs.value
+          : this.invincibleAnchorElapsedMs,
       includeAppsTimer: data.includeAppsTimer.present
           ? data.includeAppsTimer.value
           : this.includeAppsTimer,
@@ -3597,8 +3808,14 @@ class ParentalControls extends DataClass
           ..write('id: $id, ')
           ..write('protectedAccess: $protectedAccess, ')
           ..write('uninstallWindowTime: $uninstallWindowTime, ')
+          ..write('uninstallWindowTimeZoneId: $uninstallWindowTimeZoneId, ')
+          ..write('uninstallAnchorEpochMs: $uninstallAnchorEpochMs, ')
+          ..write('uninstallAnchorElapsedMs: $uninstallAnchorElapsedMs, ')
           ..write('isInvincibleModeOn: $isInvincibleModeOn, ')
           ..write('invincibleWindowTime: $invincibleWindowTime, ')
+          ..write('invincibleWindowTimeZoneId: $invincibleWindowTimeZoneId, ')
+          ..write('invincibleAnchorEpochMs: $invincibleAnchorEpochMs, ')
+          ..write('invincibleAnchorElapsedMs: $invincibleAnchorElapsedMs, ')
           ..write('includeAppsTimer: $includeAppsTimer, ')
           ..write('includeAppsLaunchLimit: $includeAppsLaunchLimit, ')
           ..write('includeAppsActivePeriod: $includeAppsActivePeriod, ')
@@ -3615,8 +3832,14 @@ class ParentalControls extends DataClass
       id,
       protectedAccess,
       uninstallWindowTime,
+      uninstallWindowTimeZoneId,
+      uninstallAnchorEpochMs,
+      uninstallAnchorElapsedMs,
       isInvincibleModeOn,
       invincibleWindowTime,
+      invincibleWindowTimeZoneId,
+      invincibleAnchorEpochMs,
+      invincibleAnchorElapsedMs,
       includeAppsTimer,
       includeAppsLaunchLimit,
       includeAppsActivePeriod,
@@ -3631,8 +3854,14 @@ class ParentalControls extends DataClass
           other.id == this.id &&
           other.protectedAccess == this.protectedAccess &&
           other.uninstallWindowTime == this.uninstallWindowTime &&
+          other.uninstallWindowTimeZoneId == this.uninstallWindowTimeZoneId &&
+          other.uninstallAnchorEpochMs == this.uninstallAnchorEpochMs &&
+          other.uninstallAnchorElapsedMs == this.uninstallAnchorElapsedMs &&
           other.isInvincibleModeOn == this.isInvincibleModeOn &&
           other.invincibleWindowTime == this.invincibleWindowTime &&
+          other.invincibleWindowTimeZoneId == this.invincibleWindowTimeZoneId &&
+          other.invincibleAnchorEpochMs == this.invincibleAnchorEpochMs &&
+          other.invincibleAnchorElapsedMs == this.invincibleAnchorElapsedMs &&
           other.includeAppsTimer == this.includeAppsTimer &&
           other.includeAppsLaunchLimit == this.includeAppsLaunchLimit &&
           other.includeAppsActivePeriod == this.includeAppsActivePeriod &&
@@ -3646,8 +3875,14 @@ class ParentalControlsTableCompanion extends UpdateCompanion<ParentalControls> {
   final Value<int> id;
   final Value<bool> protectedAccess;
   final Value<TimeOfDayAdapter> uninstallWindowTime;
+  final Value<String> uninstallWindowTimeZoneId;
+  final Value<int> uninstallAnchorEpochMs;
+  final Value<int> uninstallAnchorElapsedMs;
   final Value<bool> isInvincibleModeOn;
   final Value<TimeOfDayAdapter> invincibleWindowTime;
+  final Value<String> invincibleWindowTimeZoneId;
+  final Value<int> invincibleAnchorEpochMs;
+  final Value<int> invincibleAnchorElapsedMs;
   final Value<bool> includeAppsTimer;
   final Value<bool> includeAppsLaunchLimit;
   final Value<bool> includeAppsActivePeriod;
@@ -3659,8 +3894,14 @@ class ParentalControlsTableCompanion extends UpdateCompanion<ParentalControls> {
     this.id = const Value.absent(),
     this.protectedAccess = const Value.absent(),
     this.uninstallWindowTime = const Value.absent(),
+    this.uninstallWindowTimeZoneId = const Value.absent(),
+    this.uninstallAnchorEpochMs = const Value.absent(),
+    this.uninstallAnchorElapsedMs = const Value.absent(),
     this.isInvincibleModeOn = const Value.absent(),
     this.invincibleWindowTime = const Value.absent(),
+    this.invincibleWindowTimeZoneId = const Value.absent(),
+    this.invincibleAnchorEpochMs = const Value.absent(),
+    this.invincibleAnchorElapsedMs = const Value.absent(),
     this.includeAppsTimer = const Value.absent(),
     this.includeAppsLaunchLimit = const Value.absent(),
     this.includeAppsActivePeriod = const Value.absent(),
@@ -3673,8 +3914,14 @@ class ParentalControlsTableCompanion extends UpdateCompanion<ParentalControls> {
     this.id = const Value.absent(),
     this.protectedAccess = const Value.absent(),
     this.uninstallWindowTime = const Value.absent(),
+    this.uninstallWindowTimeZoneId = const Value.absent(),
+    this.uninstallAnchorEpochMs = const Value.absent(),
+    this.uninstallAnchorElapsedMs = const Value.absent(),
     this.isInvincibleModeOn = const Value.absent(),
     this.invincibleWindowTime = const Value.absent(),
+    this.invincibleWindowTimeZoneId = const Value.absent(),
+    this.invincibleAnchorEpochMs = const Value.absent(),
+    this.invincibleAnchorElapsedMs = const Value.absent(),
     this.includeAppsTimer = const Value.absent(),
     this.includeAppsLaunchLimit = const Value.absent(),
     this.includeAppsActivePeriod = const Value.absent(),
@@ -3687,8 +3934,14 @@ class ParentalControlsTableCompanion extends UpdateCompanion<ParentalControls> {
     Expression<int>? id,
     Expression<bool>? protectedAccess,
     Expression<int>? uninstallWindowTime,
+    Expression<String>? uninstallWindowTimeZoneId,
+    Expression<int>? uninstallAnchorEpochMs,
+    Expression<int>? uninstallAnchorElapsedMs,
     Expression<bool>? isInvincibleModeOn,
     Expression<int>? invincibleWindowTime,
+    Expression<String>? invincibleWindowTimeZoneId,
+    Expression<int>? invincibleAnchorEpochMs,
+    Expression<int>? invincibleAnchorElapsedMs,
     Expression<bool>? includeAppsTimer,
     Expression<bool>? includeAppsLaunchLimit,
     Expression<bool>? includeAppsActivePeriod,
@@ -3702,10 +3955,22 @@ class ParentalControlsTableCompanion extends UpdateCompanion<ParentalControls> {
       if (protectedAccess != null) 'protected_access': protectedAccess,
       if (uninstallWindowTime != null)
         'uninstall_window_time': uninstallWindowTime,
+      if (uninstallWindowTimeZoneId != null)
+        'uninstall_window_time_zone_id': uninstallWindowTimeZoneId,
+      if (uninstallAnchorEpochMs != null)
+        'uninstall_anchor_epoch_ms': uninstallAnchorEpochMs,
+      if (uninstallAnchorElapsedMs != null)
+        'uninstall_anchor_elapsed_ms': uninstallAnchorElapsedMs,
       if (isInvincibleModeOn != null)
         'is_invincible_mode_on': isInvincibleModeOn,
       if (invincibleWindowTime != null)
         'invincible_window_time': invincibleWindowTime,
+      if (invincibleWindowTimeZoneId != null)
+        'invincible_window_time_zone_id': invincibleWindowTimeZoneId,
+      if (invincibleAnchorEpochMs != null)
+        'invincible_anchor_epoch_ms': invincibleAnchorEpochMs,
+      if (invincibleAnchorElapsedMs != null)
+        'invincible_anchor_elapsed_ms': invincibleAnchorElapsedMs,
       if (includeAppsTimer != null) 'include_apps_timer': includeAppsTimer,
       if (includeAppsLaunchLimit != null)
         'include_apps_launch_limit': includeAppsLaunchLimit,
@@ -3726,8 +3991,14 @@ class ParentalControlsTableCompanion extends UpdateCompanion<ParentalControls> {
       {Value<int>? id,
       Value<bool>? protectedAccess,
       Value<TimeOfDayAdapter>? uninstallWindowTime,
+      Value<String>? uninstallWindowTimeZoneId,
+      Value<int>? uninstallAnchorEpochMs,
+      Value<int>? uninstallAnchorElapsedMs,
       Value<bool>? isInvincibleModeOn,
       Value<TimeOfDayAdapter>? invincibleWindowTime,
+      Value<String>? invincibleWindowTimeZoneId,
+      Value<int>? invincibleAnchorEpochMs,
+      Value<int>? invincibleAnchorElapsedMs,
       Value<bool>? includeAppsTimer,
       Value<bool>? includeAppsLaunchLimit,
       Value<bool>? includeAppsActivePeriod,
@@ -3739,8 +4010,20 @@ class ParentalControlsTableCompanion extends UpdateCompanion<ParentalControls> {
       id: id ?? this.id,
       protectedAccess: protectedAccess ?? this.protectedAccess,
       uninstallWindowTime: uninstallWindowTime ?? this.uninstallWindowTime,
+      uninstallWindowTimeZoneId:
+          uninstallWindowTimeZoneId ?? this.uninstallWindowTimeZoneId,
+      uninstallAnchorEpochMs:
+          uninstallAnchorEpochMs ?? this.uninstallAnchorEpochMs,
+      uninstallAnchorElapsedMs:
+          uninstallAnchorElapsedMs ?? this.uninstallAnchorElapsedMs,
       isInvincibleModeOn: isInvincibleModeOn ?? this.isInvincibleModeOn,
       invincibleWindowTime: invincibleWindowTime ?? this.invincibleWindowTime,
+      invincibleWindowTimeZoneId:
+          invincibleWindowTimeZoneId ?? this.invincibleWindowTimeZoneId,
+      invincibleAnchorEpochMs:
+          invincibleAnchorEpochMs ?? this.invincibleAnchorEpochMs,
+      invincibleAnchorElapsedMs:
+          invincibleAnchorElapsedMs ?? this.invincibleAnchorElapsedMs,
       includeAppsTimer: includeAppsTimer ?? this.includeAppsTimer,
       includeAppsLaunchLimit:
           includeAppsLaunchLimit ?? this.includeAppsLaunchLimit,
@@ -3769,6 +4052,18 @@ class ParentalControlsTableCompanion extends UpdateCompanion<ParentalControls> {
           .$converteruninstallWindowTime
           .toSql(uninstallWindowTime.value));
     }
+    if (uninstallWindowTimeZoneId.present) {
+      map['uninstall_window_time_zone_id'] =
+          Variable<String>(uninstallWindowTimeZoneId.value);
+    }
+    if (uninstallAnchorEpochMs.present) {
+      map['uninstall_anchor_epoch_ms'] =
+          Variable<int>(uninstallAnchorEpochMs.value);
+    }
+    if (uninstallAnchorElapsedMs.present) {
+      map['uninstall_anchor_elapsed_ms'] =
+          Variable<int>(uninstallAnchorElapsedMs.value);
+    }
     if (isInvincibleModeOn.present) {
       map['is_invincible_mode_on'] = Variable<bool>(isInvincibleModeOn.value);
     }
@@ -3776,6 +4071,18 @@ class ParentalControlsTableCompanion extends UpdateCompanion<ParentalControls> {
       map['invincible_window_time'] = Variable<int>($ParentalControlsTableTable
           .$converterinvincibleWindowTime
           .toSql(invincibleWindowTime.value));
+    }
+    if (invincibleWindowTimeZoneId.present) {
+      map['invincible_window_time_zone_id'] =
+          Variable<String>(invincibleWindowTimeZoneId.value);
+    }
+    if (invincibleAnchorEpochMs.present) {
+      map['invincible_anchor_epoch_ms'] =
+          Variable<int>(invincibleAnchorEpochMs.value);
+    }
+    if (invincibleAnchorElapsedMs.present) {
+      map['invincible_anchor_elapsed_ms'] =
+          Variable<int>(invincibleAnchorElapsedMs.value);
     }
     if (includeAppsTimer.present) {
       map['include_apps_timer'] = Variable<bool>(includeAppsTimer.value);
@@ -3811,8 +4118,14 @@ class ParentalControlsTableCompanion extends UpdateCompanion<ParentalControls> {
           ..write('id: $id, ')
           ..write('protectedAccess: $protectedAccess, ')
           ..write('uninstallWindowTime: $uninstallWindowTime, ')
+          ..write('uninstallWindowTimeZoneId: $uninstallWindowTimeZoneId, ')
+          ..write('uninstallAnchorEpochMs: $uninstallAnchorEpochMs, ')
+          ..write('uninstallAnchorElapsedMs: $uninstallAnchorElapsedMs, ')
           ..write('isInvincibleModeOn: $isInvincibleModeOn, ')
           ..write('invincibleWindowTime: $invincibleWindowTime, ')
+          ..write('invincibleWindowTimeZoneId: $invincibleWindowTimeZoneId, ')
+          ..write('invincibleAnchorEpochMs: $invincibleAnchorEpochMs, ')
+          ..write('invincibleAnchorElapsedMs: $invincibleAnchorElapsedMs, ')
           ..write('includeAppsTimer: $includeAppsTimer, ')
           ..write('includeAppsLaunchLimit: $includeAppsLaunchLimit, ')
           ..write('includeAppsActivePeriod: $includeAppsActivePeriod, ')

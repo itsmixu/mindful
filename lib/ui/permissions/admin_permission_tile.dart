@@ -18,6 +18,7 @@ import 'package:mindful/core/enums/item_position.dart';
 import 'package:mindful/core/extensions/ext_build_context.dart';
 import 'package:mindful/providers/system/parental_controls_provider.dart';
 import 'package:mindful/providers/system/permissions_provider.dart';
+import 'package:mindful/providers/system/time_windows_provider.dart';
 import 'package:mindful/ui/common/default_list_tile.dart';
 import 'package:mindful/ui/dialogs/confirmation_dialog.dart';
 import 'package:mindful/ui/permissions/accessibility_permission_card.dart';
@@ -42,9 +43,7 @@ class AdminPermissionTile extends ConsumerWidget {
 
     if (isAdminEnabled) {
       /// User wants to Disable
-      if (ref
-          .read(parentalControlsProvider.notifier)
-          .isBetweenUninstallWindow) {
+      if (ref.read(timeWindowsProvider).isBetweenUninstallWindow) {
         ref.read(permissionProvider.notifier).disableAdminPermission();
       } else {
         context.showSnackAlert(

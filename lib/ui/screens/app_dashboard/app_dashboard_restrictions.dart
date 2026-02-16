@@ -22,6 +22,7 @@ import 'package:mindful/config/hero_tags.dart';
 import 'package:mindful/models/app_info.dart';
 import 'package:mindful/providers/restrictions/apps_restrictions_provider.dart';
 import 'package:mindful/providers/system/parental_controls_provider.dart';
+import 'package:mindful/providers/system/time_windows_provider.dart';
 import 'package:mindful/providers/usage/apps_launch_count_provider.dart';
 import 'package:mindful/providers/restrictions/restriction_groups_provider.dart';
 import 'package:mindful/ui/common/active_period_tile_content.dart';
@@ -56,7 +57,7 @@ class AppDashboardRestrictions extends ConsumerWidget {
     /// If restricted by invincible mode
     final isInvincibleRestricted = ref.read(parentalControlsProvider
             .select((v) => v.isInvincibleModeOn && v.includeAppsLaunchLimit)) &&
-        !ref.read(parentalControlsProvider.notifier).isBetweenInvincibleWindow;
+        !ref.read(timeWindowsProvider).isBetweenInvincibleWindow;
 
     /// Show snack bar and return if restricted
     if (isInvincibleRestricted && launchLimit > 0) {
@@ -177,9 +178,7 @@ class AppDashboardRestrictions extends ConsumerWidget {
             final isInvincibleRestricted = ref.read(
                     parentalControlsProvider.select((v) =>
                         v.isInvincibleModeOn && v.includeAppsActivePeriod)) &&
-                !ref
-                    .read(parentalControlsProvider.notifier)
-                    .isBetweenInvincibleWindow;
+                !ref.read(timeWindowsProvider).isBetweenInvincibleWindow;
 
             if (isInvincibleRestricted &&
                 restriction.periodDurationInMins > 0) {
